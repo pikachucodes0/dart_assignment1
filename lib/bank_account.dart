@@ -228,6 +228,37 @@ class Bank{
   }
 }
 
+// A StudentAccount class with no fees and a maximum balance of $5,000
+class StudentAccount extends BankAccount{
+
+  final double _maxBalance = 5000;
+  StudentAccount(super._accHolder, super._accNumber, super._balance);
+
+  @override
+  double deposit(double amount) {
+    if(_balance + amount > _maxBalance){
+      print("Maximum Balance Exceeded");
+    }else{
+      _balance += amount;
+      print("New Balance: $_balance");
+    }
+    return _balance;
+  }
+
+  @override
+  double withdraw(double amount) {
+  if(amount > _balance){
+    print("Insufficient balance");
+  }else{
+    _balance -= amount;
+
+    print("withdran $amount \nNew Balance: $_balance");
+  }
+  return _balance;
+  }
+
+}
+
 void main(){  
   Bank bank = Bank();
   
