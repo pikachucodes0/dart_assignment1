@@ -40,6 +40,15 @@ abstract class BankAccount{
   set setBalance(double balance){
     _balance = balance;
   }
+ // Transaction history tracking for each account
+  List<String> _transactions =[];
+  void addTransaction(String details){
+    _transactions.add(details);
+  }
+  void showTransaction(){
+    print("Transaction History:");
+    print("$_transactions");
+  }
 
 }
 
@@ -68,6 +77,7 @@ class SavingsAccount extends BankAccount implements InterestBearing {
   double deposit(double amount) {
     if(amount > 0){
       _balance += amount;
+      addTransaction("Deposited $amount");
       print("Deposit Amount: $amount \nNew Balance: $_balance");
     }else{
       print("Invalid Amount");
@@ -86,6 +96,7 @@ class SavingsAccount extends BankAccount implements InterestBearing {
     else{
       _balance -= amount;
       _withdrawCount++;
+      addTransaction("Withdrwal $amount");
       print("Withdrawn $amount \nNew Balance: $_balance");
     }
     return _balance;
@@ -111,6 +122,7 @@ class CheckingAccount extends BankAccount{
   double deposit(double amount) {
     if(amount > 0){
       _balance += amount;
+      addTransaction("Deposited $amount");
       print("Deposit Amount: $amount \nNew Balance: $_balance");
       }else{
         print("Invalid Amount");
@@ -127,6 +139,7 @@ class CheckingAccount extends BankAccount{
   _balance -= amount;
   if(_balance < 0 ){
     _balance -= _overdraftFee;
+    addTransaction("Withdrawl $amount");
     print("Overdraft Fee of $_overdraftFee applied");
   }
       
@@ -150,6 +163,7 @@ class PremiumAccount extends BankAccount implements InterestBearing{
   double deposit(double amount) {
     if(amount > 0){
       _balance += amount;
+      addTransaction("Deposited $amount");
       print("Deposit Amount: $amount \nNew Balance: $_balance");
     }else{
       print("Invalid Amount");
@@ -168,6 +182,7 @@ class PremiumAccount extends BankAccount implements InterestBearing{
       );
     } else {
       _balance = _balance - amount;
+      addTransaction("Withdrawl $amount");
       print("Withdrawn $amount. \nCurrent Balance: $_balance");
     }
     return _balance;
@@ -224,9 +239,19 @@ class Bank{
     for(var acc in _accounts){
       acc.accInformation();
     }
+  }
 
+  // A method to calculate and apply monthly interest to all interest-bearing accounts
+  void applyMonthlyInterest(){
+      for(var account in _accounts){
+        if(account is InterestBearing){
+          (account as InterestBearing).calculateInterest();
+        }
+      }
+      print("Monthly interest to all interest-bearing accounts");
   }
 }
+  
 
 // A StudentAccount class with no fees and a maximum balance of $5,000
 class StudentAccount extends BankAccount{
@@ -294,6 +319,8 @@ void main(){
   saving.calculateInterest();
   bank.accountReport();
 
-
+  saving.showTransaction();
+  checking.showTransaction();
+  premium.showTransaction();
 }
 
