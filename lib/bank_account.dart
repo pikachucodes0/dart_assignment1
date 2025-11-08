@@ -1,6 +1,6 @@
 abstract class BankAccount{
   final int _accNumber;
-  final String _accHolder;
+  String _accHolder;
   double _balance;
 
   BankAccount(
@@ -20,5 +20,118 @@ abstract class BankAccount{
   }
 
   //getter and setter for proper encapsulation
-  
+ 
+  int get getAccNumber{
+    return _accNumber;
+  }
+
+  String get getAccHolder{
+    return _accHolder;
+  }
+
+  set setAccHolder(String accHolder){
+    _accHolder = accHolder;
+  }
+
+  double get getBalance{
+    return _balance;
+  }
+
+  set setBalance(double balance){
+    _balance = balance;
+  }
+
+}
+
+//abstract class InterestBearing
+
+abstract class InterestBearing{
+  void calculateInterest();
+}
+
+// Implement three types of accounts that inherit from Bank account
+
+class SavingsAccount extends BankAccount implements InterestBearing {
+
+  final double _minBalance = 500;
+  final double _interestRate = 0.2;
+  double _withdrawCount = 0;
+  final double _withdrawLimit = 3;
+  SavingsAccount(
+    super._accHolder,
+    super._accNumber,
+    super._balance
+    );
+
+
+  @override
+  double deposit(double amount) {
+    if(amount > 0){
+      _balance += amount;
+      print("Deposit Amount: $amount \nNew Balance: $_balance");
+    }else{
+      print("Invalid Amount");
+    }
+    return _balance;
+  }
+
+  @override
+  double withdraw(double amount) {
+    if(_withdrawCount >= _withdrawLimit){
+      print("Withdrawal Limit Exceeded");
+    }
+    else if(_balance - amount < _minBalance){
+      print("Minimun Balance of $_minBalance must be maintained");
+    }
+    else{
+      _balance -= amount;
+      _withdrawCount++;
+      print("Withdrawn $amount \nNew Balance: $_balance");
+    }
+    return _balance;
+  }
+
+  @override
+  void calculateInterest() {
+    double interest = _balance * _interestRate;
+    _balance += interest;
+    print("Interest of $interest added \nNew Balance: $_balance");
+  }
+}
+
+class CheckingAccount extends BankAccount{
+  double _overdraftFee = 35;
+    CheckingAccount(
+    super._accHolder,
+    super._accNumber,
+    super._balance
+    );
+    
+  @override
+  double deposit(double amount) {
+    if(amount > 0){
+      _balance += amount;
+      print("Deposit Amount: $amount \nNew Balance: $_balance");
+      }else{
+        print("Invalid Amount");
+      }
+      return _balance;
+    }
+
+  @override
+  double withdraw(double amount) {
+  if(amount <= 0){
+    print("Invalid Withdrawal Amount ");
+  }
+  else if(_balance <= 0 ){
+    _balance -= _overdraftFee;
+    print("Overdraft Fee of $_overdraftFee applied");
+  }
+  else{
+      _balance -= amount;
+      print("Withdrawn $amount \nNew Balance: $_balance");
+    }
+    return _balance;
+  }
+
 }
