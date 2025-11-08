@@ -100,12 +100,12 @@ class SavingsAccount extends BankAccount implements InterestBearing {
 }
 
 class CheckingAccount extends BankAccount{
-  double _overdraftFee = 35;
-    CheckingAccount(
+  final double _overdraftFee = 35;
+  CheckingAccount(
     super._accHolder,
     super._accNumber,
     super._balance
-    );
+  );
     
   @override
   double deposit(double amount) {
@@ -121,17 +121,64 @@ class CheckingAccount extends BankAccount{
   @override
   double withdraw(double amount) {
   if(amount <= 0){
-    print("Invalid Withdrawal Amount ");
+    print("Invalid Withdrawal Amount");
+    return _balance;
   }
-  else if(_balance <= 0 ){
+  _balance -= amount;
+  if(_balance < 0 ){
     _balance -= _overdraftFee;
     print("Overdraft Fee of $_overdraftFee applied");
   }
-  else{
-      _balance -= amount;
-      print("Withdrawn $amount \nNew Balance: $_balance");
+      
+  print("Withdrawn $amount \nNew Balance: $_balance");
+  return _balance;
+  
+  }
+}
+
+class PremiumAccount extends BankAccount implements InterestBearing{
+  final double _minBalance = 10000;
+  final double _interestRate = 0.05;
+  PremiumAccount(
+    super._accHolder,
+    super._accNumber,
+    super._balance
+  );
+
+ 
+  @override
+  double deposit(double amount) {
+    if(amount > 0){
+      _balance += amount;
+      print("Deposit Amount: $amount \nNew Balance: $_balance");
+    }else{
+      print("Invalid Amount");
     }
     return _balance;
   }
+
+
+  @override
+  double withdraw(double amount) {
+    if (amount <= 0) {
+      print("Invalid withdrawal amount.");
+    } else if (_balance - amount < _minBalance) {
+      print(
+        "Cannot withdraw. Minimum balance of \$$_minBalance must be maintained.",
+      );
+    } else {
+      _balance = _balance - amount;
+      print("Withdrawn $amount. \nCurrent Balance: $_balance");
+    }
+    return _balance;
+  }
+
+   @override
+  void calculateInterest() {
+    double interest = _balance *_interestRate;
+    _balance += interest;
+    print("Interest of $interest has been added.\nNew balance: $_balance");
+  }
+
 
 }
