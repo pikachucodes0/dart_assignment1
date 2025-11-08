@@ -180,5 +180,51 @@ class PremiumAccount extends BankAccount implements InterestBearing{
     print("Interest of $interest has been added.\nNew balance: $_balance");
   }
 
-
 }
+
+
+class Bank{
+  List<BankAccount> _accounts = [];
+
+  //Create accounts
+  void createAccount(BankAccount account){
+    _accounts.add(account);
+    print("${account._accNumber} has been created");
+  }
+
+  //Find accounts by account number
+
+  BankAccount? findAccount(int accNumber){
+    for(var account in _accounts){
+      if(accNumber == account._accNumber){
+        return account;
+      }
+    }
+    print("Account found");
+    return null;
+  }
+
+  //Transfer money between accounts
+  void transfer(int senderAccNo, int recieverAccNo, double amount){
+    var senderAcc = findAccount(senderAccNo);
+    var recieverAcc = findAccount(recieverAccNo);
+
+    if(senderAcc == null || recieverAcc == null){
+      print("Invalid Account Number");
+    }
+    else{
+      senderAcc.withdraw(amount);
+      recieverAcc.deposit(amount);
+      print("$amount has been transfered from $senderAcc to $recieverAcc");
+    }
+  }
+  
+  void accountReport(){
+    print("Report of All Accounts");
+    for(var acc in _accounts){
+      acc.accInformation();
+    }
+
+  }
+}
+
