@@ -277,7 +277,7 @@ class StudentAccount extends BankAccount{
   }else{
     _balance -= amount;
 
-    print("withdran $amount \nNew Balance: $_balance");
+    print("Withdrawn $amount \nNew Balance: $_balance");
   }
   return _balance;
   }
