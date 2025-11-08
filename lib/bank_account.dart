@@ -54,9 +54,9 @@ abstract class InterestBearing{
 class SavingsAccount extends BankAccount implements InterestBearing {
 
   final double _minBalance = 500;
-  final double _interestRate = 0.2;
-  double _withdrawCount = 0;
-  final double _withdrawLimit = 3;
+  final double _interestRate = 0.02;
+  int _withdrawCount = 0;
+  final int _withdrawLimit = 3;
   SavingsAccount(
     super._accHolder,
     super._accNumber,
@@ -200,7 +200,7 @@ class Bank{
         return account;
       }
     }
-    print("Account found");
+    print("Account not found");
     return null;
   }
 
@@ -215,7 +215,7 @@ class Bank{
     else{
       senderAcc.withdraw(amount);
       recieverAcc.deposit(amount);
-      print("$amount has been transfered from $senderAcc to $recieverAcc");
+      print("$amount has been transfered from ${senderAcc.getAccHolder} to ${recieverAcc.getAccHolder}");
     }
   }
   
@@ -226,5 +226,43 @@ class Bank{
     }
 
   }
+}
+
+void main(){  
+  Bank bank = Bank();
+  
+
+  //create accounts
+  SavingsAccount saving = SavingsAccount("Aryan", 1111, 2000);
+  CheckingAccount checking = CheckingAccount("Amit", 2222, 1000);
+  PremiumAccount premium = PremiumAccount("Asrim", 3636, 25000);
+
+  bank.createAccount(saving);
+  bank.createAccount(checking);
+  bank.createAccount(premium);
+
+  //report
+  bank.accountReport();
+
+  // deposits
+  saving.deposit(500);
+  checking.deposit(1500);
+  premium.deposit(2000);
+
+  //withdrawls
+  saving.withdraw(1000);
+  saving.withdraw(3000);
+  checking.withdraw(4000);
+  premium.withdraw(15000);
+
+  //transfer money
+  bank.transfer(3636, 1111, 500);
+
+  bank.accountReport();
+
+  saving.calculateInterest();
+  bank.accountReport();
+
+
 }
 
